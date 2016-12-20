@@ -63,6 +63,7 @@ OnDesktopSwitch(GeneralDefaultDesktop)
 ; Format and translate up the modifier keys strings
 
 switchModifiers := KeyboardShortcutsSwitch
+switchModifiers2 := KeyboardShortcutsSwitch2
 moveModifiers := KeyboardShortcutsMove
 moveAndSwitchModifiers := KeyboardShortcutsMoveAndSwitch
 previousKey := KeyboardShortcutsPrevious
@@ -81,6 +82,7 @@ arrayS.Insert("Win"),                   arrayR.Insert("#")
 
 for index in arrayS {
     switchModifiers := RegExReplace(switchModifiers, arrayS[index], arrayR[index])
+    switchModifiers2 := RegExReplace(switchModifiers2, arrayS[index], arrayR[index])
     moveModifiers := RegExReplace(moveModifiers, arrayS[index], arrayR[index])
     moveAndSwitchModifiers := RegExReplace(moveAndSwitchModifiers, arrayS[index], arrayR[index])
     plusTenModifiers := RegExReplace(plusTenModifiers, arrayS[index], arrayR[index])
@@ -90,6 +92,7 @@ for index in arrayS {
 ;  If they are set incorrectly in the settings, an error will be thrown. 
 
 areSwitchModsValid := (switchModifiers <> "")
+areSwitchMods2Valid := (switchModifiers2 <> "")
 areMoveModsValid := (moveModifiers <> "")
 areMoveAndSwitchModsValid := (moveAndSwitchModifiers <> "")
 arePrevAndNextKeysValid := (previousKey <> "" && nextKey <> "")
@@ -106,6 +109,11 @@ while (i < 10) {
             arePlusTenModsValid := (ErrorLevel = 0)
             ErrorLevel := 0
         }
+    }
+    if (areSwitchMods2Valid) {
+        Hotkey, % (switchModifiers2 . i), OnShiftNumberedPress, UseErrorLevel
+        areSwitchMods2Valid := (ErrorLevel = 0)
+        ErrorLevel := 0
     }
     if (areMoveModsValid) {
         Hotkey, % (moveModifiers . i), OnMoveNumberedPress, UseErrorLevel
@@ -391,3 +399,6 @@ _ShowTooltip(n:=1) {
     params.backgroundColor := TooltipsBackgroundColor
     Toast(params)
 }
+
+WS_EX_TOOLWINDOW := 0x00000080
+#t::WinSet, ExStyle, ^%WS_EX_TOOLWINDOW%, A
